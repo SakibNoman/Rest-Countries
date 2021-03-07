@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 
 const CountryDetails = () => {
     const [country,setCountry] = useState([]);
     const {name} = country;
     console.log(name);
+    const history = useHistory()
     const {countryName} = useParams();
+    let errorDisplay = "";
     useEffect(()=>{
         fetch(`https://restcountries.eu/rest/v2/name/${countryName}?fullText=true`)
         .then(res => res.json())
-        .then(data => setCountry(data[0]) )
+        .then(data => {
+            if(data[0]){
+                setCountry(data[0])
+            }
+            else{
+                history.push('/error')
+            }
+        } )
     },[])
     return (
         <div>
@@ -17,5 +26,4 @@ const CountryDetails = () => {
         </div>
     );
 };
-
 export default CountryDetails;
